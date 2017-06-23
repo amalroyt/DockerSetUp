@@ -1,0 +1,43 @@
+version: '2' # specify docker-compose version
+
+# Define the services/containers to be run
+services:
+  angular: # Front End client services
+    build: angular-client # specify the directory of the Dockerfile
+    ports:
+      - "8080:8080" # specify port forewarding
+
+  express: #Backend node service
+    build: express-service # specify the directory of the Dockerfile
+    ports:
+      - "8081:8081" #specify ports forewarding
+    links:
+      - db #link this service to the database service
+
+  db: #Database service
+    build: mysql-service # specify image to build container from
+    container_name: database
+    ports:
+      - "3307:3306" # specify port forewarding
+
+  #mysql-dump-backup:
+  #  depends_on:
+  #    - db
+  #  command: mysqldump --all-databases -uroot -p root > ./cybageMomApp/mysql-service/all-databases.sql
+
+  # mysql-dump-load:  
+  #   build: dump-script
+  #     #context: .
+  #   depends_on:
+  #     - db
+  #     - express
+  #     - angular
+  #   #command: mysqldump  -uroot -p root < ./rolloutScriptMOMv1.4.sql
+  #   #command: mysqldump  -uroot -proot domo_mom_db < ./rolloutScriptMOMv1.4.sql
+
+
+
+#Reference links
+  #https://stackoverflow.com/questions/30063907/using-docker-compose-how-to-execute-multiple-commands
+  #https://severalnines.com/blog/mysql-docker-composing-stack
+  #https://scotch.io/tutorials/create-a-mean-app-with-angular-2-and-docker-compose
